@@ -22,14 +22,22 @@
 * Monitor
 
 ## Milestones
+
 ### March 7th (Monday)
+
 * Be able to read in sensors, do basic tests (light up LED)
 * Have all sensors hooked up to breadboard and RPi
+
 ### March 9th
+
 * Set final goal (piano vs. visualization based on sensitivity of sensors)
+
 ### March 11
+
 * Complete project
+
 ### March 14th
+
 * Present in Gates 3rd floor landing
 
 ## Possible Extensions
