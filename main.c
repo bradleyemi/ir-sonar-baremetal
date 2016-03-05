@@ -23,8 +23,18 @@ void interrupt_vector(unsigned pc) {
 }
 
 void main(void) {
+  //Wire the sensor to GPIO23 and an LED to GPIO24. 
+  gpio_init();
   sensor_init();
+  gpio_set_output(GPIO_PIN24);
   while (1) {
-    /*spin*/
+  	int out = gpio_read(GPIO_PIN23);
+    printf("pin 23 output: %d\n", out);
+    if (out == 1) {
+    	gpio_write(GPIO_PIN24,1);
+    }
+    else {
+    	gpio_write(GPIO_PIN24,0);
+    }
   }
 }
