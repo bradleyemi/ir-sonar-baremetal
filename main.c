@@ -13,6 +13,8 @@ const unsigned WIDTH = 640;
 const unsigned HEIGHT = 480;
 const unsigned DEPTH = 4;
 
+int ir_sensors[3] = {GPIO_PIN20, GPIO_PIN21, GPIO_PIN22};
+
 // This function should not be called.
 void impossible_vector(unsigned pc) {
   printf("impossible exception at pc=%x\n", pc);
@@ -24,16 +26,14 @@ void interrupt_vector(unsigned pc) {
 }
 
 void main(void) {
-  //Wire the sensor to GPIO23 and an LED to GPIO24. 
   sensor_init();
   while (1) {
-  	/*int out = gpio_read(GPIO_PIN23);
-    printf("pin 23 output: %d\n", out);
-    if (out == 1) {
-    	gpio_write(GPIO_PIN24,1);
+    int ir_sensor_reads[3];
+    for (int i = 0; i < 3; i++) {
+      int r = gpio_read(ir_sensors[i]);
+      ir_sensor_reads[i] = r;
+      printf("Sensor %d = %d   ", i, r);
     }
-    else {
-    	gpio_write(GPIO_PIN24,0);
-    }*/
+    printf("\n");
   }
 }
