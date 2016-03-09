@@ -42,7 +42,7 @@ void sensor_int_handler(void) {
     for (int i = 0; i < 3; i++) {
 		int sensor = ir_sensors[i];
 		if (gpio_read(sensor) == 1) {
-			printf("\nTrigger on sensor %d", i);
+			//printf("\nTrigger on sensor %d", i);
 		}
 	}
 

@@ -3,6 +3,7 @@
 #include <uart.h>
 #include "circular.h"
 #include "sensor.h"
+#include "gl.h"
 
 typedef unsigned color;
 const color WHITE = 0xffffffff;
@@ -26,13 +27,17 @@ void interrupt_vector(unsigned pc) {
 }
 
 void main(void) {
+  delay(3);
   sensor_init();
+  gl_init(WIDTH, HEIGHT, GL_DOUBLEBUFFER);
+  gl_draw_string(10,10,"Infrared Motion Detection System", WHITE);
+  gl_swap_buffer();
   while (1) {
     int ir_sensor_reads[3];
     for (int i = 0; i < 3; i++) {
       int r = gpio_read(ir_sensors[i]);
       ir_sensor_reads[i] = r;
-      printf("Sensor %d = %d   ", i, r);
+      //printf("Sensor %d = %d   ", i, r);
     }
     printf("\n");
   }
