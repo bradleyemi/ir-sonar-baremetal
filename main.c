@@ -123,7 +123,18 @@ void sensor_read_clear(void) {
   }
 }
 
+void wait_for_rising_edge(int pin) {
+  while (gpio_read(pin) == 1) {} 
+  while (gpio_read(pin) == 0) {}
+}
+
+void wait_for_falling_edge(unsigned pin) {
+  while (gpio_read(pin) == 0) {}
+  while (gpio_read(pin) == 1) {}
+}
+
 void main(void) {
+  /*
   delay(3);
   sensor_init();
   screen_init();
@@ -136,11 +147,28 @@ void main(void) {
       delay(5);
       intruder_undetected();
     }
-    /*int ir_sensor_reads[3];
-    for (int i = 0; i < 3; i++) {
-      int r = gpio_read(ir_sensors[i]);
-      ir_sensor_reads[i] = r;
+  */
+  gpio_init();
+  gpio_set_output(GPIO_PIN5);
+  gpio_set_input(GPIO_PIN6);
+  delay(3);
+
+  while (1) {
+    int s = timer_get_time();
+    while (timer_get_time() - s < 11) {
+     gpio_write(GPIO_PIN5, 1);
     }
-    printf("\n");*/
-  }
+    gpio_write(GPIO_PIN5, 0);
+    wait_for_rising_edge(GPIO_PIN6);
+    int start = timer_get_time();
+    wait_for_falling_edge(GPIO_PIN6);
+    int t = timer_get_time() - start;
+    printf("Time = %d     ", t);
+    printf("Distance = %d\n", t/58);
+    /*
+    s = timer_get_time();
+    while (timer_get_time() - s < 20000) {
+      gpio_write(GPIO_PIN5, 0);
+    }*/
+  }  
 }
