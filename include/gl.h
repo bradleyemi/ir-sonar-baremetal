@@ -27,6 +27,10 @@ void gl_clear(color c);
 
 void gl_draw_pixel(int x, int y, color c);
 
+void gl_draw_hline(int x1, int x2, int y, color c);
+void gl_draw_vline(int y1, int y2, int x, color c);
+void gl_draw_box(int x1, int x2, int y1, int y2, color c);
+
 void gl_draw_rect(int x, int y, int w, int h, color c);
 
 void gl_draw_char(int x, int y, char letter, color c);

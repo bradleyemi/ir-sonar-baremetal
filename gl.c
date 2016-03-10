@@ -48,6 +48,27 @@ void gl_draw_pixel(int x, int y, color c) {
 	}
 }
 
+void gl_draw_hline(int x1, int x2, int y, color c) {
+	unsigned (*im)[gl_get_width()] = (unsigned (*)[gl_get_width()])fb_get_draw_buffer();
+	for (unsigned i = x1; i <= x2; i++) {
+        im[y][i] = c;
+	}
+}
+
+void gl_draw_vline(int y1, int y2, int x, color c) {
+	unsigned (*im)[gl_get_width()] = (unsigned (*)[gl_get_width()])fb_get_draw_buffer();
+	for (unsigned i = y1; i <= y2; i++) {
+		im[i][x] = c;
+	}
+}
+
+void gl_draw_box(int x1, int x2, int y1, int y2, color c) {
+	gl_draw_hline(x1,x2,y1,c);
+	gl_draw_hline(x1,x2,y2,c);
+	gl_draw_vline(y1,y2,x1,c);
+	gl_draw_vline(y1,y2,x2,c);
+}
+
 void gl_draw_rect(int x, int y, int w, int h, color c) {
 	unsigned (*im)[gl_get_width()] = (unsigned (*)[gl_get_width()])fb_get_draw_buffer();
 	for (unsigned i = x; i < x+w; i++) {

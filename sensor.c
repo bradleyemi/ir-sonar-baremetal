@@ -6,7 +6,9 @@
 #define RPI_INT_DISABLE_1            0x2000B21C
 #define RPI_INT_DISABLE_2            0x2000B220
 
-extern int ir_sensors[2];
+extern int ir_sensors[3];
+extern int ir_sensor_reads[3];
+extern int detection_flag;
 
 
 void sensor_init(void) {
@@ -32,21 +34,21 @@ void sensor_init(void) {
 }
 
 void sensor_int_handler(void) {
+	system_disable_interrupts();
+
+	//check and clear events
 	for (int i = 0; i < 3; i++) {
 		int sensor = ir_sensors[i];
 		gpio_check_and_clear_event(sensor);
 	}
-	system_disable_interrupts();
-
 	//check which interrupt was triggered
     for (int i = 0; i < 3; i++) {
 		int sensor = ir_sensors[i];
 		if (gpio_read(sensor) == 1) {
-			//printf("\nTrigger on sensor %d", i);
+			detection_flag = 1;
+			ir_sensor_reads[i] = 1;
 		}
 	}
-
-    delay(1);
 
     //turn off the LEDs
     //gpio_write(OUT1, 0);
