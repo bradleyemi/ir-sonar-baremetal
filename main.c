@@ -4,6 +4,7 @@
 #include "circular.h"
 #include "sensor.h"
 #include "gl.h"
+#include "sonar.h"
 
 typedef unsigned color;
 const color WHITE = 0xffffffff;
@@ -15,8 +16,12 @@ const unsigned WIDTH = 640;
 const unsigned HEIGHT = 480;
 const unsigned DEPTH = 4;
 
-int ir_sensors[3] = {GPIO_PIN20, GPIO_PIN21, GPIO_PIN22};
-int ir_sensor_reads[3] = {0,0,0};
+int ir_sensors[8] = {GPIO_PIN2, GPIO_PIN3, GPIO_PIN4, GPIO_PIN17, GPIO_PIN27, GPIO_PIN22, GPIO_PIN10, GPIO_PIN9};
+int ir_sensor_reads[8] = {0,0,0,0,0,0,0,0};
+
+int sonar_trig[8] = {GPIO_PIN11, GPIO_PIN6, GPIO_PIN19, GPIO_PIN21, GPIO_PIN18, GPIO_PIN24, GPIO_PIN8, GPIO_PIN12};
+int sonar_echo[8] = {GPIO_PIN5, GPIO_PIN13, GPIO_PIN26, GPIO_PIN20, GPIO_PIN23, GPIO_PIN25, GPIO_PIN7, GPIO_PIN16};
+
 int detection_flag = 0;
 
 // This function should not be called.
@@ -148,27 +153,27 @@ void main(void) {
       intruder_undetected();
     }
   */
+  
   gpio_init();
-  gpio_set_output(GPIO_PIN5);
-  gpio_set_input(GPIO_PIN6);
+  sensor_init();
+  sonar_init();
+  screen_init();
   delay(3);
 
   while (1) {
-    int s = timer_get_time();
-    while (timer_get_time() - s < 11) {
-     gpio_write(GPIO_PIN5, 1);
-    }
-    gpio_write(GPIO_PIN5, 0);
-    wait_for_rising_edge(GPIO_PIN6);
-    int start = timer_get_time();
-    wait_for_falling_edge(GPIO_PIN6);
-    int t = timer_get_time() - start;
-    printf("Time = %d     ", t);
-    printf("Distance = %d\n", t/58);
-    /*
-    s = timer_get_time();
-    while (timer_get_time() - s < 20000) {
-      gpio_write(GPIO_PIN5, 0);
+    printf("Detection Flag %d\n", detection_flag);
+    /*for (int i = 0; i < 8; i++) {
+      int dist = sonar_trigger_and_read(sonar_trig[i], sonar_echo[i]);
+      printf("Sonar %d: %d cm.\n", i, dist);
     }*/
+    /*
+    if (detection_flag == 1) {
+      detection_flag = 0;
+      intruder_detected();
+      sensor_read_clear();
+      delay(5);
+      intruder_undetected();
+    }
+    */
   }  
 }

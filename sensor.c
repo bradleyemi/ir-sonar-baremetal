@@ -12,7 +12,6 @@ extern int detection_flag;
 
 
 void sensor_init(void) {
-	gpio_init();
 
     for (int i = 0; i < 3; i++) {
     	int sensor = ir_sensors[i];

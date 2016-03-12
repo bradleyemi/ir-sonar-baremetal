@@ -16,7 +16,7 @@ LDLIBS = -lpi -lgcc
 .SUFFIXES:
 
 NAME = main
-C_SRCS = $(NAME).c cstart.c fb.c gl.c font.c sensor.c
+C_SRCS = $(NAME).c cstart.c fb.c gl.c font.c sensor.c sonar.c
 S_SRCS = start.s
 
 all : $(NAME).bin
