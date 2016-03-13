@@ -143,7 +143,6 @@ void wait_for_falling_edge(unsigned pin) {
 }
 
 void main(void) {
-  
   delay(3);
   sensor_init();
   screen_init();
