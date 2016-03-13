@@ -3,10 +3,12 @@
 
 extern int sonar_trig[8];
 extern int sonar_echo[8];
+extern int sonar_distance_reads[8];
 
 extern int detection_flag;
 extern int timer_get_time(void);
 
+int N_ATT = 4;
 
 void sonar_init(void) {
     system_disable_interrupts();
@@ -23,8 +25,6 @@ void sonar_init(void) {
 }
 
 int sonar_trigger_and_read(int trig, int echo) {
-    system_disable_interrupts();
-
     int wait_time = 15000;
     int start_pulse = timer_get_time();
     gpio_write(trig, 0);
@@ -50,7 +50,6 @@ int sonar_trigger_and_read(int trig, int echo) {
         return dist;
       }
     }
-    system_enable_interrupts();
     return dist;
 }
 
@@ -69,3 +68,11 @@ int sonar_get_distance(int trig, int echo, int n_att) {
         return distance_sum / n_accept;
     }
 }
+
+void sonar_trigger_all(void) {
+    for (int i = 0; i < 8; i++) {
+        sonar_distance_reads[i] = sonar_get_distance(sonar_trig[i], sonar_echo[i], N_ATT);
+    }
+}
+
+

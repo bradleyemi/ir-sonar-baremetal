@@ -22,6 +22,8 @@ int ir_sensor_reads[8] = {0,0,0,0,0,0,0,0};
 int sonar_trig[8] = {GPIO_PIN11, GPIO_PIN6, GPIO_PIN19, GPIO_PIN21, GPIO_PIN16, GPIO_PIN7, GPIO_PIN25, GPIO_PIN23};
 int sonar_echo[8] = {GPIO_PIN5, GPIO_PIN13, GPIO_PIN26, GPIO_PIN20, GPIO_PIN12, GPIO_PIN8, GPIO_PIN24, GPIO_PIN18};
 
+int sonar_distance_reads[8] = {0,0,0,0,0,0,0,0};
+
 int detection_flag = 0;
 
 // This function should not be called.
@@ -126,6 +128,7 @@ void intruder_undetected(void) {
 void sensor_read_clear(void) {
   for (int i = 0; i < 8; i++) {
     ir_sensor_reads[i] = 0;
+    sonar_distance_reads[i] = 0;
   }
 }
 
@@ -142,24 +145,24 @@ void wait_for_falling_edge(unsigned pin) {
 void main(void) {
   
   delay(3);
-  //sensor_init();
-  //screen_init();
+  sensor_init();
+  screen_init();
   sonar_init();
   while (1) {
-    for (int i = 0; i < 8; i++) {
-      int s = sonar_get_distance(sonar_trig[i], sonar_echo[i], 4);
-      printf("Sensor %d : %d cm\n", i, s);
-    }
-  }
-  /*while (1) {
     if (detection_flag == 1) {
       system_disable_interrupts();
+      for (int n_iter = 0; n_iter < 60; n_iter++) {
+        system_enable_interrupts();
+        delay(1);
+        system_disable_interrupts();
+        intruder_detected();
+        sonar_trigger_all();
+        //sonar_draw();
+      }
       detection_flag = 0;
-      intruder_detected();
-      delay(2);
       intruder_undetected();
       sensor_read_clear();
       system_enable_interrupts();
     } 
-  } */ 
+  } 
 }
