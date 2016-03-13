@@ -13,7 +13,7 @@ extern int detection_flag;
 
 void sensor_init(void) {
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 8; i++) {
     	int sensor = ir_sensors[i];
     	gpio_set_input(sensor);
         gpio_set_pullup(sensor);
@@ -36,22 +36,23 @@ void sensor_int_handler(void) {
 	system_disable_interrupts();
 
 	//check and clear events
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 8; i++) {
 		int sensor = ir_sensors[i];
-		gpio_check_and_clear_event(sensor);
+		int s = gpio_check_and_clear_event(sensor);
+        if (s == 1) {
+            detection_flag = 1;
+            printf("Event triggered on sensor %d\n", i);
+        }
 	}
 	//check which interrupt was triggered
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 8; i++) {
 		int sensor = ir_sensors[i];
 		if (gpio_read(sensor) == 1) {
-			detection_flag = 1;
+            printf("Detection on sensor %d\n", i);
 			ir_sensor_reads[i] = 1;
 		}
 	}
-
-    //turn off the LEDs
-    //gpio_write(OUT1, 0);
-    //gpio_write(OUT2, 0);
+    
 
     system_enable_interrupts();
 }

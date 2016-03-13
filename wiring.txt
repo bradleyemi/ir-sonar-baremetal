@@ -55,12 +55,14 @@ White Short = Sonar 8 Trig
 White Long = Sonar 8 Echo
 
 RIGHT:
-Orange = GPIO 18
-Yellow = GPIO 23
-Blue = GPIO 24
-Green = GPIO 25
-Grey = GPIO 8
-Purple = GPIO 7
-Brown = GPIO 12
-White = GPIO 16
+Orange = GPIO 16
+Yellow = GPIO 12
+Blue = GPIO 7
+Green = GPIO 8
+Grey = GPIO 25
+Purple = GPIO 24
+Brown = GPIO 23
+White = GPIO 18
+
+16, 12, 7, 8, 25, 24, 23, 18
 

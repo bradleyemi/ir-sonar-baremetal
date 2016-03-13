@@ -19,8 +19,8 @@ const unsigned DEPTH = 4;
 int ir_sensors[8] = {GPIO_PIN2, GPIO_PIN3, GPIO_PIN4, GPIO_PIN17, GPIO_PIN27, GPIO_PIN22, GPIO_PIN10, GPIO_PIN9};
 int ir_sensor_reads[8] = {0,0,0,0,0,0,0,0};
 
-int sonar_trig[8] = {GPIO_PIN11, GPIO_PIN6, GPIO_PIN19, GPIO_PIN21, GPIO_PIN18, GPIO_PIN24, GPIO_PIN8, GPIO_PIN12};
-int sonar_echo[8] = {GPIO_PIN5, GPIO_PIN13, GPIO_PIN26, GPIO_PIN20, GPIO_PIN23, GPIO_PIN25, GPIO_PIN7, GPIO_PIN16};
+int sonar_trig[8] = {GPIO_PIN11, GPIO_PIN6, GPIO_PIN19, GPIO_PIN21, GPIO_PIN16, GPIO_PIN7, GPIO_PIN25, GPIO_PIN23};
+int sonar_echo[8] = {GPIO_PIN5, GPIO_PIN13, GPIO_PIN26, GPIO_PIN20, GPIO_PIN12, GPIO_PIN8, GPIO_PIN24, GPIO_PIN18};
 
 int detection_flag = 0;
 
@@ -51,17 +51,18 @@ void draw_sensor(int n, color c) {
   int ym = V_OFFSET + BOX_SIZE;
   int yb = V_OFFSET + 2*BOX_SIZE;
 
-  //left sensors
-  if (n==0) gl_draw_rect(xm-S_OFFSET-S_SIZE, yt+S_OFFSET, S_SIZE, S_SIZE, c);
-  if (n==1) gl_draw_rect(xl+S_OFFSET, ym-S_OFFSET-S_SIZE, S_SIZE, S_SIZE, c);
-  if (n==2) gl_draw_rect(xl+S_OFFSET, ym+S_OFFSET, S_SIZE, S_SIZE, c);
-  if (n==3) gl_draw_rect(xm-S_OFFSET-S_SIZE, yb-S_OFFSET-S_SIZE, S_SIZE, S_SIZE, c);
+  //top sensors
+  if (n==0) gl_draw_rect(xl+S_OFFSET, yt+S_OFFSET, S_SIZE, S_SIZE, c);
+  if (n==1) gl_draw_rect(xm-S_OFFSET-S_SIZE, yt+S_OFFSET, S_SIZE, S_SIZE, c);
+  if (n==2) gl_draw_rect(xm+S_OFFSET, yt+S_OFFSET, S_SIZE, S_SIZE, c);
+  if (n==3) gl_draw_rect(xr-S_OFFSET-S_SIZE,  yt+S_OFFSET, S_SIZE, S_SIZE, c);
   
-  //right sensors
-  if (n==4) gl_draw_rect(xm+S_OFFSET, yt+S_OFFSET, S_SIZE, S_SIZE, c);
-  if (n==5) gl_draw_rect(xr-S_OFFSET-S_SIZE, ym-S_OFFSET-S_SIZE, S_SIZE, S_SIZE, c);
-  if (n==6) gl_draw_rect(xr-S_OFFSET-S_SIZE, ym+S_OFFSET, S_SIZE, S_SIZE, c);
-  if (n==7) gl_draw_rect(xm+S_OFFSET, yb-S_OFFSET-S_SIZE, S_SIZE, S_SIZE, c);
+  //bottom sensors
+  
+  if (n==4) gl_draw_rect(xr-S_OFFSET-S_SIZE, yb-S_OFFSET-S_SIZE, S_SIZE, S_SIZE, c);
+  if (n==5) gl_draw_rect(xm+S_OFFSET, yb-S_OFFSET-S_SIZE, S_SIZE, S_SIZE, c);
+  if (n==6) gl_draw_rect(xm-S_OFFSET-S_SIZE, yb-S_OFFSET-S_SIZE, S_SIZE, S_SIZE, c);
+  if (n==7) gl_draw_rect(xl+S_OFFSET, yb-S_OFFSET-S_SIZE, S_SIZE, S_SIZE, c);
 }
 
 //non-swapping
@@ -108,7 +109,7 @@ void intruder_detected(void) {
   gl_draw_string(10,10,"Infrared Motion Detection System", WHITE);
   gl_draw_string(10,10 + 2*gl_get_char_height(), "INTRUDER DETECTED!", RED);
   draw_grid();
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 8; i++) {
     if (ir_sensor_reads[i] == 1) draw_sensor(i, RED);
   }
   gl_swap_buffer();
@@ -123,7 +124,7 @@ void intruder_undetected(void) {
 }
 
 void sensor_read_clear(void) {
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 8; i++) {
     ir_sensor_reads[i] = 0;
   }
 }
@@ -139,41 +140,26 @@ void wait_for_falling_edge(unsigned pin) {
 }
 
 void main(void) {
-  /*
-  delay(3);
-  sensor_init();
-  screen_init();
-  while (1) {
-    printf("Detection Flag %d\n", detection_flag);
-    if (detection_flag == 1) {
-      detection_flag = 0;
-      intruder_detected();
-      sensor_read_clear();
-      delay(5);
-      intruder_undetected();
-    }
-  */
   
-  gpio_init();
-  sensor_init();
-  sonar_init();
-  screen_init();
   delay(3);
-
+  //sensor_init();
+  //screen_init();
+  sonar_init();
   while (1) {
-    printf("Detection Flag %d\n", detection_flag);
-    /*for (int i = 0; i < 8; i++) {
-      int dist = sonar_trigger_and_read(sonar_trig[i], sonar_echo[i]);
-      printf("Sonar %d: %d cm.\n", i, dist);
-    }*/
-    /*
+    for (int i = 0; i < 8; i++) {
+      int s = sonar_get_distance(sonar_trig[i], sonar_echo[i], 4);
+      printf("Sensor %d : %d cm\n", i, s);
+    }
+  }
+  /*while (1) {
     if (detection_flag == 1) {
+      system_disable_interrupts();
       detection_flag = 0;
       intruder_detected();
-      sensor_read_clear();
-      delay(5);
+      delay(2);
       intruder_undetected();
-    }
-    */
-  }  
+      sensor_read_clear();
+      system_enable_interrupts();
+    } 
+  } */ 
 }
