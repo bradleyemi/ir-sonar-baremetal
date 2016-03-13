@@ -1,0 +1,11 @@
+todo.txt
+
+- Include clock
+- Include alert sound
+- Include crosshair
+
+If time:
+- Sensor piano
+
+Try:
+- 1 round of triggers instead of 4

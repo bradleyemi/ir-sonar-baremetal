@@ -54,17 +54,16 @@ void draw_sensor(int n, color c) {
   int yb = V_OFFSET + 2*BOX_SIZE;
 
   //top sensors
-  if (n==0) gl_draw_rect(xl+S_OFFSET, yt+S_OFFSET, S_SIZE, S_SIZE, c);
-  if (n==1) gl_draw_rect(xm-S_OFFSET-S_SIZE, yt+S_OFFSET, S_SIZE, S_SIZE, c);
-  if (n==2) gl_draw_rect(xm+S_OFFSET, yt+S_OFFSET, S_SIZE, S_SIZE, c);
-  if (n==3) gl_draw_rect(xr-S_OFFSET-S_SIZE,  yt+S_OFFSET, S_SIZE, S_SIZE, c);
+  if (n==0) gl_draw_rect(xl+(4*15), yt+S_OFFSET, S_SIZE, S_SIZE, c);
+  if (n==1) gl_draw_rect(xl+(4*35), yt+S_OFFSET, S_SIZE, S_SIZE, c);
+  if (n==2) gl_draw_rect(xl+(4*55), yt+S_OFFSET, S_SIZE, S_SIZE, c);
+  if (n==3) gl_draw_rect(xl+(4*75),  yt+S_OFFSET, S_SIZE, S_SIZE, c);
   
   //bottom sensors
-  
-  if (n==4) gl_draw_rect(xr-S_OFFSET-S_SIZE, yb-S_OFFSET-S_SIZE, S_SIZE, S_SIZE, c);
-  if (n==5) gl_draw_rect(xm+S_OFFSET, yb-S_OFFSET-S_SIZE, S_SIZE, S_SIZE, c);
-  if (n==6) gl_draw_rect(xm-S_OFFSET-S_SIZE, yb-S_OFFSET-S_SIZE, S_SIZE, S_SIZE, c);
-  if (n==7) gl_draw_rect(xl+S_OFFSET, yb-S_OFFSET-S_SIZE, S_SIZE, S_SIZE, c);
+  if (n==4) gl_draw_rect(xl+(4*75), yb-S_OFFSET-S_SIZE, S_SIZE, S_SIZE, c);
+  if (n==5) gl_draw_rect(xl+(4*55), yb-S_OFFSET-S_SIZE, S_SIZE, S_SIZE, c);
+  if (n==6) gl_draw_rect(xl+(4*35), yb-S_OFFSET-S_SIZE, S_SIZE, S_SIZE, c);
+  if (n==7) gl_draw_rect(xl+(4*15), yb-S_OFFSET-S_SIZE, S_SIZE, S_SIZE, c);
 }
 
 //non-swapping
@@ -97,6 +96,42 @@ void draw_grid(void) {
   }
 }
 
+void sonar_draw(void) {
+  color c = GREEN;
+  int V_OFFSET = 10+4*gl_get_char_height();
+  int H_OFFSET = 10;
+  int BOX_SIZE = 180;
+
+  int S_OFFSET = 20;
+  int S_SIZE = 10;
+
+  //corners (left, mid, right, top, mid, bottom)
+  int xl = H_OFFSET;
+  int xm = H_OFFSET + BOX_SIZE;
+  int xr = H_OFFSET + 2*BOX_SIZE;
+  int yt = V_OFFSET;
+  int ym = V_OFFSET + BOX_SIZE;
+  int yb = V_OFFSET + 2*BOX_SIZE;
+
+  gl_clear(BLACK);
+  gl_draw_string(10,10,"Infrared Motion Detection System", WHITE);
+  gl_draw_string(10,10 + 2*gl_get_char_height(), "INTRUDER DETECTED!", RED);
+  draw_grid();
+
+  for (int i = 0; i < 8; i++) {
+    if (ir_sensor_reads[i] == 1) draw_sensor(i, RED);
+  }
+
+  int array_size = sizeof(sonar_distance_reads)/sizeof(sonar_distance_reads[0]);
+  for (int i = 0; i < array_size; i++) {
+    if (sonar_distance_reads[i] == 0) {}
+    else {
+      gl_draw_rect(xl+(40*(i+1)), yt+S_OFFSET+sonar_distance_reads[i], S_SIZE, S_SIZE, c);
+    }
+  }
+  gl_swap_buffer();
+}
+
 //swapping
 void screen_init(void) {
   gl_init(WIDTH, HEIGHT, GL_DOUBLEBUFFER);
@@ -108,7 +143,7 @@ void screen_init(void) {
 //swapping
 void intruder_detected(void) {
   gl_clear(BLACK);
-  gl_draw_string(10,10,"Infrared Motion Detection System", WHITE);
+  gl_draw_string(10,10,"IR and Sonar Detection System", WHITE);
   gl_draw_string(10,10 + 2*gl_get_char_height(), "INTRUDER DETECTED!", RED);
   draw_grid();
   for (int i = 0; i < 8; i++) {
@@ -120,7 +155,7 @@ void intruder_detected(void) {
 //swapping
 void intruder_undetected(void) {
   gl_clear(BLACK);
-  gl_draw_string(10,10,"Infrared Motion Detection System", WHITE);
+  gl_draw_string(10,10,"IR and Sonar Detection System", WHITE);
   draw_grid();
   gl_swap_buffer();
 }
@@ -156,7 +191,7 @@ void main(void) {
         system_disable_interrupts();
         intruder_detected();
         sonar_trigger_all();
-        //sonar_draw();
+        sonar_draw();
       }
       detection_flag = 0;
       intruder_undetected();
