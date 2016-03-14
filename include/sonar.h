@@ -2,6 +2,7 @@
 #define SONAR_H
 
 void sonar_init(void);
-int sonar_trigger_and_read(int trig, int echo);
+void sonar_trigger_all(void);
+void sonar_int_handler(void);
 
 #endif

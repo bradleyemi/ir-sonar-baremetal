@@ -52,7 +52,5 @@ void sensor_int_handler(void) {
 			ir_sensor_reads[i] = 1;
 		}
 	}
-    
-
     system_enable_interrupts();
 }
