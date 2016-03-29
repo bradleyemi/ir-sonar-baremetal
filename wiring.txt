@@ -1,0 +1,68 @@
+Breadboard 1 (IR Sensors):
+
+LEFT:
+Orange = IR1
+Yellow = IR2
+Blue = IR3
+Green = IR4
+Grey = IR5
+Purple = IR6
+Brown = IR7
+White = IR8
+
+RIGHT:
+Orange = GPIO 2
+Yellow = GPIO 3
+Blue = GPIO 4
+Green = GPIO 17
+Grey = GPIO 27
+Purple = GPIO 22
+Brown = GPIO 10
+White = GPIO 9
+
+Breadboard 2 (Sonar Table 1): 
+
+LEFT:
+Orange Short = Sonar 1 Trig
+Orange Long = Sonar 1 Echo
+Yellow Short = Sonar 2 Trig
+Yellow Long = Sonar 2 Echo
+Blue Short = Sonar 3 Trig
+Blue Long = Sonar 3 Echo
+Green Short = Sonar 4 Trig
+Green Long = Sonar 4 Echo
+
+RIGHT:
+Orange = GPIO 11
+Yellow = GPIO 5
+Blue = GPIO 6
+Green = GPIO 13
+Grey = GPIO 19
+Purple = GPIO 26
+Brown = GPIO 21
+White = GPIO 20
+
+Breadboard 3 (Sonar Table 2):
+
+LEFT:
+Grey Short = Sonar 5 Trig
+Grey Long = Sonar 5 Echo
+Purple Short = Sonar 6 Trig
+Purple Long = Sonar 6 Echo
+Brown Short = Sonar 7 Trig
+Brown Long = Sonar 7 Echo
+White Short = Sonar 8 Trig
+White Long = Sonar 8 Echo
+
+RIGHT:
+Orange = GPIO 16
+Yellow = GPIO 12
+Blue = GPIO 7
+Green = GPIO 8
+Grey = GPIO 25
+Purple = GPIO 24
+Brown = GPIO 23
+White = GPIO 18
+
+16, 12, 7, 8, 25, 24, 23, 18
+
